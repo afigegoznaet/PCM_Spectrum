@@ -23,6 +23,11 @@ private:
 	std::vector<FT2StreamConsumer*> listeners;
 	QFuture<void> streamReader;
 	QFile* rawSample;
+
+	quint16 rxSize;
+	quint16 sizeTransferred;
+	//char /*trans_buf*/[10] = { 1,2,3,4,5,6,7,8,9,10 };
+	int seccess;
 };
 
 class FT2StreamConsumer : public RawFile{
