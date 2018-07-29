@@ -150,7 +150,7 @@ Engine::~Engine()
 //-----------------------------------------------------------------------------
 
 void Engine::setupExternal(){
-	initialize();
+
 	streamReader = new FT2StreamReader(this);
 	m_file = new FT2StreamConsumer(streamReader, this);
 	m_file->open(QIODevice::ReadWrite);
@@ -159,7 +159,7 @@ void Engine::setupExternal(){
 	m_analysisFile->open(QIODevice::ReadWrite);
 	m_analysisFile->readHeader();
 
-
+	initialize();
 }
 
 bool Engine::loadFile(const QString &fileName, bool isRaw)
@@ -298,6 +298,8 @@ void Engine::startPlayback()
 					this, &Engine::audioNotify);
 
 			m_count = 0;
+			if(streamReader)
+				streamReader->readStream();
 			if (m_file) {
 				m_file->seek(0);
 				m_bufferPosition = 0;

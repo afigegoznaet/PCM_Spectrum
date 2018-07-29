@@ -37,6 +37,7 @@ public:
 
 	void setData(std::vector<unsigned char> tmpBuf);
 	void resetBuffer(){internalBuffer.seek(0);}
+	void writeData(std::vector<unsigned char> tmpBuf);
 	qint64 size() const override{
 		return 0;
 	}

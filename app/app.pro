@@ -1,8 +1,8 @@
 include(../spectrum.pri)
 include(../ft2xx.pri)
 
-message("DEPEND" + $$DEPENDPATH)
-message("INCLUDE" + $$INCLUDEPATH)
+#message("DEPEND" + $$DEPENDPATH)
+#message("INCLUDE" + $$INCLUDEPATH)
 
 TEMPLATE = app
 

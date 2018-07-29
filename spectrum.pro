@@ -1,9 +1,6 @@
 include(spectrum.pri)
 include(ft2xx.pri)
 
-message($$INCLUDEPATH)
-message($$DEPENDPATH)
-
 TEMPLATE = subdirs
 
 # Ensure that library is built before application
