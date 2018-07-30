@@ -6,11 +6,13 @@
 #include <QtConcurrent/QtConcurrent>
 #include <mutex>
 
-//#define BUFFER_SIZE 16384
+#define BUFFER_SIZE 16384
 
-#define BUFFER_SIZE 4096
+//#define BUFFER_SIZE 4096
 
 std::mutex rwMutex;
+
+//#define READ_FROM_FILE
 
 #ifndef READ_FROM_FILE
 
@@ -204,9 +206,10 @@ FT2StreamReader::FT2StreamReader(QObject *parent) :
 
 void FT2StreamReader::addListener(FT2StreamConsumer* listener){
 	listeners.push_back(listener);
-	//listener->setData(tmpBuf);
+	listener->setData(tmpBuf);
+	qDebug()<<"Data address: "<<&tmpBuf[0];
 	connect(listeners[0], SIGNAL(finishedReading()), this, SLOT(readStream()),
-			Qt::ConnectionType(Qt::QueuedConnection | Qt::UniqueConnection));
+			Qt::ConnectionType(/*Qt::QueuedConnection | */Qt::UniqueConnection));
 }
 
 
@@ -254,18 +257,20 @@ bool FT2StreamConsumer::open(QIODevice::OpenMode flags){
 
 
 qint64 FT2StreamConsumer::readData(char *data, qint64 len){
-	qDebug()<<"pos: "<<internalBuffer.pos();
+	if(internalBuffer.pos() == internalBuffer.size())
+		emit finishedReading();
+	////qDebug()<<"pos: "<<internalBuffer.pos();
 	std::lock_guard<std::mutex> locker(rwMutex);
-	qDebug()<<"readData";
-	qDebug()<<"len: "<<len;
+	//qDebug()<<"readData";
+	//qDebug()<<"len: "<<len;
 	qint64 res = internalBuffer.read(data, len);
 	auto hz = internalBuffer.data();
 	//resetBuffer();
 	//qDebug()<<"data: "<<data;
-	qDebug()<<"bufsize: "<<internalBuffer.size();
-	qDebug()<<"Data: "<<internalBuffer.data().data();
-	qDebug()<<res;
-	emit finishedReading();
+	//qDebug()<<"bufsize: "<<internalBuffer.size();
+	//qDebug()<<"Data: "<<internalBuffer.data().data();
+	//qDebug()<<res;
+
 	return res;
 }
 
@@ -274,11 +279,13 @@ qint64 FT2StreamConsumer::bytesAvailable() const{
 	return internalBuffer.bytesAvailable();
 }
 
-void FT2StreamConsumer::setData(std::vector<unsigned char> tmpBuf){
-
+void FT2StreamConsumer::setData(const std::vector<unsigned char> &tmpBuf){
+	qDebug()<<"isOpen: "<<internalBuffer.isOpen();
+	qDebug()<<"Data address at set: "<<&tmpBuf[0];
+	qDebug()<<"Address: "<<&(internalBuffer.data().data()[0]);
 	internalBuffer.setData(reinterpret_cast<const char*>(&tmpBuf[0]),
 			static_cast<int>(tmpBuf.size()));
-
+	qDebug()<<"Address: "<<&(internalBuffer.data().data()[0]);
 }
 
 void FT2StreamConsumer::writeData(std::vector<unsigned char> tmpBuf){

@@ -40,11 +40,11 @@ public:
 	qint64 readData(char *data, qint64 len) override;
 	qint64 bytesAvailable() const override;
 
-	void setData(std::vector<unsigned char> tmpBuf);
+	void setData(const std::vector<unsigned char> &tmpBuf);
 	void resetBuffer(){internalBuffer.seek(0);}
 	void writeData(std::vector<unsigned char> tmpBuf);
 	qint64 size() const override{
-		return 0;
+		return LLONG_MAX;
 	}
 signals:
 	void finishedReading();
