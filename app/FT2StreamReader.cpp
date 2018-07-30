@@ -252,6 +252,7 @@ bool FT2StreamConsumer::open(QIODevice::OpenMode flags){
 	setOpenMode(QIODevice::ReadWrite);
 	qDebug()<<isOpen();
 	qDebug()<<"Internal: "<<&internalBuffer.data();
+
 	return internalBuffer.open(flags);
 }
 
@@ -289,7 +290,7 @@ void FT2StreamConsumer::setData(const std::vector<unsigned char> &tmpBuf){
 	qDebug()<<"Address: "<<&(internalBuffer.data().data()[0]);
 }
 
-void FT2StreamConsumer::writeData(std::vector<unsigned char> tmpBuf){
+void FT2StreamConsumer::writeData(const std::vector<unsigned char>& tmpBuf){
 	internalBuffer.seek(0);
 	internalBuffer.write(reinterpret_cast<const char*>(&tmpBuf[0]),
 			static_cast<int>(tmpBuf.size()));

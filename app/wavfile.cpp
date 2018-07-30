@@ -172,9 +172,9 @@ bool RawFile::readHeader(){
 		seek(0);
 	CombinedHeader header;
 	bool result = true;
-	strcpy(header.riff.descriptor.id, "RIFF");
-	strcpy(header.riff.type, "WAVE");
-	strcpy(header.wave.descriptor.id, "fmt");
+	//strcpy(header.riff.descriptor.id, "RIFF");
+	//strcpy(header.riff.type, "WAVE");
+	//strcpy(header.wave.descriptor.id, "fmt");
 	header.wave.audioFormat = 1;
 	m_fileFormat.setByteOrder(QAudioFormat::LittleEndian);
 
