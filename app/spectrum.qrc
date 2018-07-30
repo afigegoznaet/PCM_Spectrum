@@ -3,6 +3,8 @@
         <file>images/record.png</file>
         <file>images/settings.png</file>
         <file>sounds/01. Mais que fait la nasa.aiff.raw</file>
-		<file alias="raw_sample.raw">sounds/01. Mais que fait la nasa.aiff.raw</file>
+        <file alias="raw_sample.raw">sounds/01. Mais que fait la nasa.aiff.raw</file>
+        <file>images/img_logo.png</file>
+        <file>images/img_logo.bmp</file>
     </qresource>
 </RCC>

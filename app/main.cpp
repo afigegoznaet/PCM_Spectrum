@@ -50,14 +50,29 @@
 
 #include "mainwidget.h"
 #include <QApplication>
+#include <QTimer>
+#include <QSplashScreen>
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
-    app.setApplicationName("Qt Multimedia spectrum analyzer");
+	QApplication app(argc, argv);
+	app.setApplicationName("Qt Multimedia spectrum analyzer");
 
-    MainWidget w;
-    w.show();
+	QPixmap pixmap("://images/img_logo.bmp");
+	//qDebug()<<pixmap.height();
+//#if !defined(QT_DEBUG) || !defined(_WIN32)
+	QSplashScreen splash(pixmap);
+	QFont font = QApplication::font("QMenu");
+	splash.show();
+	MainWidget w;
+	QTimer *timer = new QTimer();
+	QObject::connect(timer, &QTimer::timeout, [&](){
+		splash.finish(&w);
+		w.show();
+		timer->deleteLater();
+	});
+	timer->start(2000);
 
-    return app.exec();
+
+	return app.exec();
 }

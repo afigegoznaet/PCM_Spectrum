@@ -207,7 +207,7 @@ FT2StreamReader::FT2StreamReader(QObject *parent) :
 
 void FT2StreamReader::addListener(FT2StreamConsumer* listener){
 	listeners.push_back(listener);
-	//listener->setData(tmpBuf);
+	listener->setData(tmpBuf);
 	qDebug()<<"Data address: "<<&tmpBuf[0];
 	connect(listeners[0], SIGNAL(finishedReading()), this, SLOT(readStream()),
 			Qt::ConnectionType(/*Qt::QueuedConnection | */Qt::UniqueConnection));
@@ -232,8 +232,8 @@ void FT2StreamReader::readStream(){
 #endif
 	if(sizeTransferred > 0)
 	for(auto listener : listeners)
-		//listener->resetBuffer();
-		listener->writeData(tmpBuf);
+		listener->resetBuffer();
+		//listener->writeData(tmpBuf);
 
 	qDebug()<<"Read chunk";
 	qDebug()<<"tmpsize: "<<tmpBuf.size();
@@ -285,8 +285,8 @@ void FT2StreamConsumer::setData(const std::vector<unsigned char> &tmpBuf){
 	qDebug()<<"isOpen: "<<internalBuffer.isOpen();
 	qDebug()<<"Data address at set: "<<&tmpBuf[0];
 	qDebug()<<"Address: "<<&(internalBuffer.data().data()[0]);
-	internalBuffer.setData(reinterpret_cast<const char*>(&tmpBuf[0]),
-			static_cast<int>(tmpBuf.size()));
+	internalBuffer.setData(QByteArray::fromRawData(reinterpret_cast<const char*>(&tmpBuf[0]),
+						   static_cast<int>(tmpBuf.size())));
 	qDebug()<<"Address: "<<&(internalBuffer.data().data()[0]);
 }
 
