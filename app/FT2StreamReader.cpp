@@ -1,6 +1,4 @@
 #include "FT2StreamReader.hpp"
-#include <ftd2xx.h>
-#include <LibFT4222.h>
 #include <QDebug>
 #include <QFile>
 #include <QtConcurrent/QtConcurrent>
@@ -12,9 +10,12 @@
 
 std::mutex rwMutex;
 
-//#define READ_FROM_FILE
+#define READ_FROM_FILE
 
 #ifndef READ_FROM_FILE
+
+#include <ftd2xx.h>
+#include <LibFT4222.h>
 
 FT_HANDLE ftHandle = nullptr;
 std::vector< FT_DEVICE_LIST_INFO_NODE > g_FTAllDevList;
@@ -206,7 +207,7 @@ FT2StreamReader::FT2StreamReader(QObject *parent) :
 
 void FT2StreamReader::addListener(FT2StreamConsumer* listener){
 	listeners.push_back(listener);
-	listener->setData(tmpBuf);
+	//listener->setData(tmpBuf);
 	qDebug()<<"Data address: "<<&tmpBuf[0];
 	connect(listeners[0], SIGNAL(finishedReading()), this, SLOT(readStream()),
 			Qt::ConnectionType(/*Qt::QueuedConnection | */Qt::UniqueConnection));
@@ -217,8 +218,8 @@ void FT2StreamReader::readStream(){
 
 	std::lock_guard<std::mutex> locker(rwMutex);
 #ifdef READ_FROM_FILE
-	qint64 res = rawSample->read(reinterpret_cast<char*>(&tmpBuf[0]),BUFFER_SIZE);
-	qDebug()<<"Res: "<<res;
+	sizeTransferred = rawSample->read(reinterpret_cast<char*>(&tmpBuf[0]),BUFFER_SIZE);
+	qDebug()<<"Res: "<<sizeTransferred;
 #else
 	FT_STATUS ft4222_status = FT4222_SPISlave_GetRxStatus(ftHandle, &rxSize);
 	if (ft4222_status == FT4222_OK)

@@ -34,6 +34,7 @@ class FT2StreamConsumer : public RawFile{
 	Q_OBJECT
 public:
 	explicit FT2StreamConsumer(FT2StreamReader* dataSource, QObject *parent = nullptr);
+	~FT2StreamConsumer(){setOpenMode(QIODevice::NotOpen);}
 	bool seek(qint64) override{return true;}
 	bool open(QIODevice::OpenMode flags) override;
 
@@ -46,6 +47,7 @@ public:
 	qint64 size() const override{
 		return LLONG_MAX;
 	}
+	void close() override{}
 signals:
 	void finishedReading();
 private:

@@ -237,7 +237,7 @@ void Waveform::audioPositionChanged(qint64 position)
 		if (position + m_windowLength > m_bufferPosition + m_bufferLength)
 			position = qMax(qint64(0), m_bufferPosition + m_bufferLength - m_windowLength);
 		m_audioPosition = position;
-		setWindowPosition(position);
+//		setWindowPosition(position);
 	}
 }
 
